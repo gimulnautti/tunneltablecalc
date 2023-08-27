@@ -76,6 +76,32 @@ class Program
     return texUv;
   }
 
+  static int mapColor(Vector2 uv, float aspect)
+  {
+    int[] gradient = new int[] {0,9,11,6,14,13,3,1}; // C64 gradient
+    uv.X *= aspect;
+
+    Vector2 up = new Vector2(0, 1);
+    Vector2 right = new Vector2(1, 0);
+    Vector2 middle = new Vector2(0.5f * aspect, 0.5f);
+    Vector2 toFrag = uv - middle;
+    
+    // angle + log distance from middle
+    float angle = MathF.Acos(Vector2.Dot(toFrag, up) / toFrag.Length());
+    float dist = MathF.Log(toFrag.Length());
+        
+    // have two sides to it
+    if (Vector2.Dot(toFrag, right) > 0.0)
+    {
+        angle = -angle;
+    }
+
+    // resolve color 
+    int gradIdx = gradient.Length - 1 - (int)MathF.Max(0, MathF.Min(gradient.Length - 1, 0.4f * ((1.15f / (toFrag.Length())) + 0.75f * (MathF.Cos(angle * 2.0f + 1.57f) + 1.0f))));
+
+    return gradient[gradIdx];
+  }
+
   static void WriteTunnel(String fileName, Vector2[] tunnelMap)
   {
     using (BinaryWriter writer = new BinaryWriter(File.Open(fileName, FileMode.Create)))
@@ -100,6 +126,22 @@ class Program
                 writer.Write(lowestByte); // Write the lowest byte to the binary file
               }
             }
+          }
+        }
+    }
+  }
+
+  static void WriteColor(String fileName, int[] colorMap)
+  {
+    using (BinaryWriter writer = new BinaryWriter(File.Open(fileName, FileMode.Create)))
+    {
+        for (int i=0; i<25; ++i)
+        {
+          for (int j=0; j<40; ++j)
+          {
+            int writeValue = colorMap[i*40+j];
+            byte lowestByte = (byte)(writeValue & 0xFF); // Extract the lowest byte
+            writer.Write(lowestByte); // Write the lowest byte to the binary file
           }
         }
     }
@@ -136,6 +178,18 @@ class Program
 
     WriteTunnel("tunnel2.bin", tunnelMap);
 
+    int[] colorMap = new int[40*25];
+    for (int i=0; i<25; ++i)
+    {
+      for (int j=0; j<40; ++j)
+      {
+        Vector2 uv = new Vector2((float)j / 40.0f, (float)i / 25.0f);
+        int index = i * 40 + j;
+        colorMap[index] = mapColor(uv, aspect);
+      }
+    }
+
+    WriteColor("color.bin", colorMap);
 
     Console.WriteLine("Finished");
   }
