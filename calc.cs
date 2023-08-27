@@ -78,7 +78,6 @@ class Program
 
   static int mapColor(Vector2 uv, float aspect)
   {
-    int[] gradient = new int[] {0,9,11,6,14,13,3,1}; // C64 gradient
     uv.X *= aspect;
 
     Vector2 up = new Vector2(0, 1);
@@ -97,9 +96,9 @@ class Program
     }
 
     // resolve color 
-    int gradIdx = gradient.Length - 1 - (int)MathF.Max(0, MathF.Min(gradient.Length - 1, 0.4f * ((1.15f / (toFrag.Length())) + 0.75f * (MathF.Cos(angle * 2.0f + 1.57f) + 1.0f))));
+    int gradIdx = 7 - (int)MathF.Max(0, MathF.Min(7, 0.4f * ((1.15f / (toFrag.Length())) + 0.75f * (MathF.Cos(angle * 2.0f + 1.57f) + 1.0f))));
 
-    return gradient[gradIdx];
+    return gradIdx;
   }
 
   static void WriteTunnel(String fileName, Vector2[] tunnelMap)
