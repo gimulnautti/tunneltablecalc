@@ -76,7 +76,7 @@ class Program
     return texUv;
   }
 
-  static int mapColor(Vector2 uv, float aspect)
+  static int mapColor(Vector2 uv, float aspect, Vector3 mod)
   {
     uv.X *= aspect;
 
@@ -96,7 +96,7 @@ class Program
     }
 
     // resolve color 
-    int gradIdx = 7 - (int)MathF.Max(0, MathF.Min(7, 0.4f * ((1.15f / (toFrag.Length())) + 0.75f * (MathF.Cos(angle * 2.0f + 1.57f) + 1.0f))));
+    int gradIdx = 7 - (int)MathF.Max(0, MathF.Min(7, mod.Z * ((1.0f / (toFrag.Length())) + mod.Y * (MathF.Cos(angle * mod.X + 1.57f) + 1.0f))));
 
     return gradIdx;
   }
@@ -178,17 +178,42 @@ class Program
     WriteTunnel("tunnel2.bin", tunnelMap);
 
     int[] colorMap = new int[40*25];
+
     for (int i=0; i<25; ++i)
     {
       for (int j=0; j<40; ++j)
       {
         Vector2 uv = new Vector2((float)j / 40.0f, (float)i / 25.0f);
         int index = i * 40 + j;
-        colorMap[index] = mapColor(uv, aspect);
+        colorMap[index] = mapColor(uv, aspect, new Vector3(2.0f,0.75f,0.4f));
       }
     }
 
     WriteColor("color.bin", colorMap);
+
+    for (int i=0; i<25; ++i)
+    {
+      for (int j=0; j<40; ++j)
+      {
+        Vector2 uv = new Vector2((float)j / 40.0f, (float)i / 25.0f);
+        int index = i * 40 + j;
+        colorMap[index] = mapColor(uv, aspect, new Vector3(5.0f,1.75f,0.6f));
+      }
+    }
+
+    WriteColor("color2.bin", colorMap);
+
+    for (int i=0; i<25; ++i)
+    {
+      for (int j=0; j<40; ++j)
+      {
+        Vector2 uv = new Vector2((float)j / 40.0f, (float)i / 25.0f);
+        int index = i * 40 + j;
+        colorMap[index] = mapColor(uv, aspect, new Vector3(12.0f,2.25f,0.5f));
+      }
+    }
+
+    WriteColor("color3.bin", colorMap);
 
     Console.WriteLine("Finished");
   }
