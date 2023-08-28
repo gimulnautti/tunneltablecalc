@@ -149,7 +149,7 @@ class Program
   static void Main()
   {
     Vector2[] tunnelMap = new Vector2[80*50];
-    Vector2 tiling = new Vector2(4.0f, 2.0f);
+    Vector2 tiling = new Vector2(3.0f, 1.75f);
     float aspect = 80.0f / 50.0f;
 
     for (int i=0; i<50; ++i)
@@ -209,7 +209,7 @@ class Program
       {
         Vector2 uv = new Vector2((float)j / 40.0f, (float)i / 25.0f);
         int index = i * 40 + j;
-        colorMap[index] = mapColor(uv, aspect, new Vector3(12.0f,2.25f,0.5f));
+        colorMap[index] = mapColor(uv, aspect, new Vector3(3.0f,3.5f,0.6f));
       }
     }
 
