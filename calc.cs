@@ -35,7 +35,7 @@ class Program
                     }
                 }
 
-                C64Writer.WriteTunnel(row.File, mapping);
+                C64Writer.WriteTunnel(row.File, mapping, row.GetTexSize);
             }
             else if (row.Type == "color" && row.Type2 == "tunnel")
             {

@@ -6,7 +6,7 @@ namespace calc
 {
 	public class C64Writer
 	{
-        public static void WriteTunnel(String fileName, Vector2[] tunnelMap)
+        public static void WriteTunnel(String fileName, Vector2[] tunnelMap, Vector2 texSize)
         {
             using (BinaryWriter writer = new BinaryWriter(File.Open(fileName, FileMode.Create)))
             {
@@ -22,10 +22,10 @@ namespace calc
                                 int index = (i * 2 + k) * 80 + (j * 2 + l);
                                 Vector2 value = tunnelMap[index];
 
-                                int x = (int)MathF.Floor(value.X * 8.0f);
-                                int y = (int)MathF.Floor(value.Y * 8.0f);
+                                int x = (int)MathF.Floor(value.X * texSize.X);
+                                int y = (int)MathF.Floor(value.Y * texSize.Y);
 
-                                int writeValue = y * 8 + x;
+                                int writeValue = y * (int)Math.Floor(texSize.X) + x;
                                 byte lowestByte = (byte)(writeValue & 0xFF); // Extract the lowest byte
                                 writer.Write(lowestByte); // Write the lowest byte to the binary file
                             }
