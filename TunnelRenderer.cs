@@ -26,7 +26,7 @@ namespace calc
             // stretch
             if (stretch)
             {
-                dist += MathF.Cos(dist * mod.X + angle * mod.Y) / mod.Z;
+                dist += MathF.Cos(dist * mod.X + angle * mod.Y) * mod.Z;
             }
 
             // resolve texture UV
