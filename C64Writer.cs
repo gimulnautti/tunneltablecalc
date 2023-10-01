@@ -6,7 +6,7 @@ namespace calc
 {
 	public class C64Writer
 	{
-        public static void WriteTunnel(String fileName, Vector2[] tunnelMap, Vector2 texSize)
+        public static void WriteMapping(String fileName, Vector2[] tunnelMap, Vector2 texSize)
         {
             using (BinaryWriter writer = new BinaryWriter(File.Open(fileName, FileMode.Create)))
             {

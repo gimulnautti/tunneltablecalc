@@ -35,7 +35,7 @@ namespace calc
 
         [Name("ObjectMod")]
         public string ObjectMod { get; set; }
-        public Vector3 GetObjectMod { get { return parseVec3(ObjectMod); } }
+        public Vector2 GetObjectMod { get { return parseVec2(ObjectMod); } }
 
         [Name("ViewPoint")]
         public string ViewPoint { get; set; }
@@ -45,9 +45,16 @@ namespace calc
         public string LookAt { get; set; }
         public Vector3 GetLookAt { get { return parseVec3(LookAt); } }
 
+        [Name("ViewUp")]
+        public string ViewUp { get; set; }
+        public Vector3 GetViewUp { get { return parseVec3(ViewUp); } }
+
         [Name("Repeat")]
         public string Repeat { get; set; }
         public Vector3 GetRepeat { get { return parseVec3(Repeat); } }
+
+        [Name("FlipGradient")]
+        public bool FlipGradient { get; set; }
 
         private Vector2 parseVec2(string src)
         {
@@ -57,8 +64,8 @@ namespace calc
                 return new Vector2(0, 0);
 
             Vector2 result = new Vector2(
-                float.Parse(sArray[0], CultureInfo.InvariantCulture),
-                float.Parse(sArray[1], CultureInfo.InvariantCulture));
+                float.Parse(sArray[0].Trim(), CultureInfo.InvariantCulture),
+                float.Parse(sArray[1].Trim(), CultureInfo.InvariantCulture));
 
             return result;
         }
@@ -71,9 +78,9 @@ namespace calc
                 return new Vector3(0, 0, 0);
 
             Vector3 result = new Vector3(
-                float.Parse(sArray[0], CultureInfo.InvariantCulture),
-                float.Parse(sArray[1], CultureInfo.InvariantCulture),
-                float.Parse(sArray[2], CultureInfo.InvariantCulture));
+                float.Parse(sArray[0].Trim(), CultureInfo.InvariantCulture),
+                float.Parse(sArray[1].Trim(), CultureInfo.InvariantCulture),
+                float.Parse(sArray[2].Trim(), CultureInfo.InvariantCulture));
 
             return result;
         }

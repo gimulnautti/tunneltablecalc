@@ -35,7 +35,7 @@ class Program
                     }
                 }
 
-                C64Writer.WriteTunnel(row.File, mapping, row.GetTexSize);
+                C64Writer.WriteMapping(row.File, mapping, row.GetTexSize);
             }
             else if (row.Type == "color" && row.Type2 == "tunnel")
             {
@@ -49,11 +49,52 @@ class Program
 
                         Vector2 uv = new Vector2((float)j / 40.0f, (float)i / 25.0f);
                         int index = i * 40 + j;
-                        colorMap[index] = TunnelRenderer.mapColor(uv, aspect, row.GetModulation);
+                        colorMap[index] = TunnelRenderer.mapColor(uv, aspect, row.GetModulation, row.FlipGradient);
                     }
                 }
 
                 C64Writer.WriteColor(row.File, colorMap);
+            }
+            else if (row.Type2 == "sdf")
+            {
+                SdfRenderer r = new SdfRenderer(row.Object, row.GetTiling, row.GetObjectMod, row.GetViewPoint, row.GetLookAt, row.GetViewUp, row.GetRepeat, row.FlipGradient);
+
+                if (row.Type == "mapping")
+                {
+                    Vector2[] mapping = new Vector2[80 * 50];
+
+                    for (int i = 0; i < 50; ++i)
+                    {
+                        for (int j = 0; j < 80; ++j)
+                        {
+                            Vector2 fragCoord = new Vector2(j, i);
+                            int index = i * 80 + j;
+
+                            SdfFragment f = r.RenderMapping(new Vector2(80, 50), fragCoord);
+                            mapping[index] = f.UV;
+                        }
+                    }
+
+                    C64Writer.WriteMapping(row.File, mapping, row.GetTexSize);
+                }
+                else if (row.Type == "color")
+                {
+                    int[] colorMap = new int[40 * 25];
+
+                    for (int i = 0; i < 25; ++i)
+                    {
+                        for (int j = 0; j < 40; ++j)
+                        {
+                            Vector2 fragCoord = new Vector2(j, i);
+                            int index = i * 40 + j;
+
+                            SdfFragment f = r.RenderMapping(new Vector2(40, 25), fragCoord);
+                            colorMap[index] = f.Gradient;
+                        }
+                    }
+
+                    C64Writer.WriteColor(row.File, colorMap);
+                }
             }
         }
         

@@ -46,7 +46,7 @@ namespace calc
             return texUv;
         }
 
-        public static int mapColor(Vector2 uv, float aspect, Vector3 mod)
+        public static int mapColor(Vector2 uv, float aspect, Vector3 mod, bool flipGradient)
         {
             uv.X *= aspect;
 
@@ -66,7 +66,9 @@ namespace calc
             }
 
             // resolve color 
-            int gradIdx = 7 - (int)MathF.Max(0, MathF.Min(7, mod.Z * ((1.0f / (toFrag.Length())) + mod.Y * (MathF.Cos(angle * mod.X + 1.57f) + 1.0f))));
+            int gradIdx = (int)MathF.Max(0, MathF.Min(7, mod.Z * ((1.0f / (toFrag.Length())) + mod.Y * (MathF.Cos(angle * mod.X + 1.57f) + 1.0f))));
+            if (flipGradient)
+                gradIdx = 7 - gradIdx;
 
             return gradIdx;
         }
