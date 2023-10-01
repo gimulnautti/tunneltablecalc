@@ -57,7 +57,7 @@ class Program
             }
             else if (row.Type2 == "sdf")
             {
-                SdfRenderer r = new SdfRenderer(row.Object, row.GetTiling, row.GetObjectMod, row.GetViewPoint, row.GetLookAt, row.GetViewUp, row.GetRepeat, row.FlipGradient);
+                SdfRenderer r = new SdfRenderer(row.Object, row.GetTiling, row.GetObjectMod, row.GetViewPoint, row.GetLookAt, row.GetViewUp, row.GetRepeat, row.GetRenderDistance, row.FlipGradient);
 
                 if (row.Type == "mapping")
                 {

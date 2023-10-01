@@ -20,8 +20,9 @@ namespace calc
         private Vector3 ViewUp;
         private Vector3 Repeat;
         private bool FlipGradient;
+        private float RenderDistance;
 
-        public SdfRenderer(string objectType, Vector2 tiling, Vector2 objMod, Vector3 viewPoint, Vector3 lookAt, Vector3 viewUp, Vector3 repeat, bool flipGradient)
+        public SdfRenderer(string objectType, Vector2 tiling, Vector2 objMod, Vector3 viewPoint, Vector3 lookAt, Vector3 viewUp, Vector3 repeat, float renderDistance, bool flipGradient)
 		{
 			ObjectType = objectType;
 			Tiling = tiling;
@@ -30,6 +31,7 @@ namespace calc
 			LookAt = lookAt;
 			ViewUp = viewUp;
 			Repeat = repeat;
+            RenderDistance = renderDistance;
             FlipGradient = flipGradient;
 		}
 
@@ -171,13 +173,12 @@ namespace calc
             Vector3 rd = Vector3.Normalize(p.X * uu + p.Y * vv + 1.5f * ww);
 
             // Raymarch
-            const float tmax = 6.0f;
             float t = 0.0f;
             for (int i = 0; i < 256; i++)
             {
                 Vector3 pos = ViewPoint + t * rd;
                 float h = map(pos);
-                if (h < 0.0001f || t > tmax)
+                if (h < 0.0001f || t > RenderDistance)
                 {
                     // texture lookup on hit
                     result.UV = texMap(pos);
@@ -200,15 +201,20 @@ namespace calc
 
             // Shading
             result.Gradient = 0;
-            if (t < tmax)
+            if (t < RenderDistance)
             {
                 Vector3 pos = ViewPoint + t * rd;
                 Vector3 nor = calcNormal(pos);
-                float dif = 0.5f * float.Clamp(Vector3.Dot(nor, new Vector3(0.7f, 1.6f, 0.4f)), 0.0f, 1.0f);
-                float amb = 0.5f *Vector3.Dot(nor, new Vector3(0.0f, 0.8f, 0.6f));
+                float dif = 0.4f * float.Clamp(Vector3.Dot(nor, new Vector3(0.7f, 1.6f, 0.4f)), 0.0f, 1.0f);
+                float amb = 0.4f * Vector3.Dot(nor, new Vector3(0.0f, 0.8f, 0.6f));
                 float col = amb + dif;
-                col *= MathF.Sqrt(col); // Gamma
-                result.Gradient = (int)Math.Floor(float.Clamp(col, 0.0f, 1.0f) * 7.0f); // 0 to 7 gradient levels
+
+                //col *= MathF.Sqrt(col); // Gamma
+                col = float.Clamp(col, 0.0f, 1); // Clamp to positive range
+                //col *= 1.0f - (t / RenderDistance); // Distance fade
+
+                result.Gradient = (int)Math.Floor(col * 7.9999f); // 0 to 7 gradient levels
+
                 if (FlipGradient)
                     result.Gradient = 7 - result.Gradient;
             }

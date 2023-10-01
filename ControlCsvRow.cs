@@ -56,6 +56,10 @@ namespace calc
         [Name("FlipGradient")]
         public bool FlipGradient { get; set; }
 
+        [Name("RenderDistance")]
+        public string RenderDistance { get; set; }
+        public float GetRenderDistance { get { return float.Parse(RenderDistance, CultureInfo.InvariantCulture); } }
+
         private Vector2 parseVec2(string src)
         {
             string[] sArray = src.Split(',');
