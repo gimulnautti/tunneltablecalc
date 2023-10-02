@@ -100,7 +100,10 @@ namespace calc
         {
             if (ObjectType == "invtorus")
             {
-                return sdInvTorus(pos, ObjMod);
+                if (Repeat.X > 0)
+                    return sdInvTorus(repeat(pos, Repeat), ObjMod);
+                else
+                    return sdInvTorus(pos, ObjMod);
             }
             else if (ObjectType == "torus")
             {
@@ -123,7 +126,10 @@ namespace calc
         {
             if (ObjectType == "invtorus")
             {
-                return sdTorusMapped(pos, ObjMod);
+                if (Repeat.X > 0)
+                    return sdTorusMapped(repeat(pos, Repeat), ObjMod);
+                else
+                    return sdTorusMapped(pos, ObjMod);
             }
             else if (ObjectType == "torus")
             {
@@ -162,7 +168,7 @@ namespace calc
 			SdfFragment result = new SdfFragment();
 
             // Camera matrix
-            Vector3 ww = Vector3.Normalize(ViewPoint - LookAt);
+            Vector3 ww = Vector3.Normalize(LookAt - ViewPoint);
             Vector3 uu = Vector3.Normalize(Vector3.Cross(ww, ViewUp));
             Vector3 vv = Vector3.Normalize(Vector3.Cross(uu, ww));
 
