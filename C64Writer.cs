@@ -50,6 +50,20 @@ namespace calc
                 }
             }
         }
+
+        public static void WriteArray(String fileName, int[] colorMap)
+        {
+            using (BinaryWriter writer = new BinaryWriter(File.Open(fileName, FileMode.Create)))
+            {
+                for (int j = 0; j < colorMap.Length; ++j)
+                {
+                    int writeValue = colorMap[j];
+                    byte lowestByte = (byte)(writeValue & 0xFF); // Extract the lowest byte
+                    writer.Write(lowestByte); // Write the lowest byte to the binary file
+                }
+                
+            }
+        }
     }
 }
 

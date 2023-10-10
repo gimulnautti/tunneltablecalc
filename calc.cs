@@ -5,6 +5,9 @@ using calc;
 using System.Globalization;
 using System.IO;
 using System.Collections.Generic;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.PixelFormats;
 
 class Program
 {
@@ -94,6 +97,29 @@ class Program
                     }
 
                     C64Writer.WriteColor(row.File, colorMap);
+                }
+            }
+            else if (row.Type2 == "readpng" && row.Type == "texture")
+            {
+                using (Image<Rgba32> image = Image.Load<Rgba32>(row.Filename))
+                {
+                    int[] texture = new int[(int)row.GetTexSize.X * (int)row.GetTexSize.Y];
+
+                    image.ProcessPixelRows(accessor =>
+                    {
+                        for (int i = 0; i < row.GetTexSize.Y; ++i)
+                        {
+                            Span<Rgba32> pixelRow = accessor.GetRowSpan(i);
+                            for (int j = 0; j < row.GetTexSize.X; ++j)
+                            {
+                                ref Rgba32 pixel = ref pixelRow[j];
+                                int index = i * (int)row.GetTexSize.X + j;
+                                texture[index] = (pixel.A > 0 && pixel.R > 0 && pixel.G > 0 && pixel.B > 0) ? 1 : 0;
+                            }
+                        }
+                    });
+
+                    C64Writer.WriteArray(row.File, texture);
                 }
             }
         }

@@ -15,6 +15,9 @@ namespace calc
         [Name("Type2")]
         public string Type2 { get; set; }
 
+        [Name("Filename")]
+        public string Filename { get; set; }
+
         [Name("TexSize")]
         public string TexSize { get; set; }
         public Vector2 GetTexSize { get { return parseVec2(TexSize); } }
