@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Numerics;
 using System.Threading.Channels;
+using System.Globalization;
+using System.IO;
+using System.Collections.Generic;
+using CsvHelper;
 
 namespace calc
 {
@@ -13,6 +17,7 @@ namespace calc
 	public class SdfRenderer
 	{
 		private string ObjectType;
+        private string ObjectFileName;
 		private Vector2 Tiling;
         private Vector2 ObjMod;
         private Vector3 ViewPoint;
@@ -21,10 +26,12 @@ namespace calc
         private Vector3 Repeat;
         private bool FlipGradient;
         private float RenderDistance;
+        private List<SdfCsvRow> CustomObjectRows;
 
-        public SdfRenderer(string objectType, Vector2 tiling, Vector2 objMod, Vector3 viewPoint, Vector3 lookAt, Vector3 viewUp, Vector3 repeat, float renderDistance, bool flipGradient)
+        public SdfRenderer(string objectType, string objectFileName, Vector2 tiling, Vector2 objMod, Vector3 viewPoint, Vector3 lookAt, Vector3 viewUp, Vector3 repeat, float renderDistance, bool flipGradient)
 		{
 			ObjectType = objectType;
+            ObjectFileName = objectFileName;
 			Tiling = tiling;
 			ObjMod = objMod;
 			ViewPoint = viewPoint;
@@ -33,6 +40,15 @@ namespace calc
 			Repeat = repeat;
             RenderDistance = renderDistance;
             FlipGradient = flipGradient;
+
+            if (objectFileName != string.Empty)
+            {
+                using (var reader = new StreamReader(ObjectFileName))
+                using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+                {
+                    CustomObjectRows = new List<SdfCsvRow>(csv.GetRecords<SdfCsvRow>());
+                }
+            }
 		}
 
         static Vector2 vecXZ(Vector3 p)
@@ -96,6 +112,104 @@ namespace calc
             return pos - s * vecRound(pos / s);
         }
 
+        float sdOpUnion(in float d1, in float d2)
+        {
+            return MathF.Min(d1, d2);
+        }
+
+        float opSubtraction(in float d1, in float d2)
+        {
+            return MathF.Max(d1,-d2);
+        }
+
+        float opIntersection(in float d1,in float d2)
+        {
+            return MathF.Max(d1,d2);
+        }
+        
+        float opXor(in float d1, in float d2)
+        {
+            return MathF.Max(MathF.Min(d1,d2),-MathF.Max(d1,d2));
+        }
+
+        Vector3 transformToObjDomain(in Vector3 p, SdfCsvRow row)
+        {
+            Vector3 objDomainP = (p - row.GetTranslate);
+            Matrix4x4 rotation = Matrix4x4.CreateFromYawPitchRoll(-row.GetRotate.Y, -row.GetRotate.X, -row.GetRotate.Z);
+            objDomainP = Vector3.Transform(objDomainP, rotation);
+            objDomainP /= row.GetScale;
+            return objDomainP;
+        }
+
+        float sdCustomObject(in Vector3 p)
+        {
+            float accumD = 100000000.0f;
+            foreach (var row in CustomObjectRows)
+            {
+                Vector3 objDomainP = transformToObjDomain(p, row);
+                Vector2 dimVec2 = new Vector2(row.GetDimensions.X, row.GetDimensions.Y);
+
+                float objD = 100000000.0f;
+                if (row.Shape == "invtorus")
+                {
+                    objD = sdInvTorus(objDomainP, dimVec2);
+                }
+                else if (row.Shape == "torus")
+                {
+                    objD = sdTorus(objDomainP, dimVec2);
+                }
+                else if (row.Shape == "sphere")
+                {
+                    objD = sdSphere(objDomainP, row.GetDimensions.X);
+                }
+
+                if (row.Boolean == "add")
+                {
+                    accumD = sdOpUnion(accumD, objD);
+                }
+                else if (row.Boolean == "subtract")
+                {
+                    accumD = opSubtraction(accumD, objD);
+                }
+                else if (row.Boolean == "intersect")
+                {
+                    accumD = opIntersection(accumD, objD);
+                }
+                else if (row.Boolean == "xor")
+                {
+                    accumD = opXor(accumD, objD);
+                }
+            }
+            return accumD;
+        }
+
+        Vector2 sdCustomObjectTex(in Vector3 p)
+        {
+            float thresholdMapthis = 0.0001f;
+            foreach (var row in CustomObjectRows)
+            {
+                Vector3 objDomainP = transformToObjDomain(p, row);
+                Vector2 dimVec2 = new Vector2(row.GetDimensions.X, row.GetDimensions.Y);
+
+                if (row.Shape == "invtorus")
+                {
+                    if (sdInvTorus(objDomainP, dimVec2) < thresholdMapthis)
+                        return sdTorusMapped(objDomainP, dimVec2);
+                }
+                else if (row.Shape == "torus")
+                {
+                    if (sdTorus(objDomainP, dimVec2) < thresholdMapthis)
+                        return sdTorusMapped(objDomainP, dimVec2);
+                }
+                else if (row.Shape == "sphere")
+                {
+                    if (sdSphere(objDomainP, row.GetDimensions.X) < thresholdMapthis)
+                        return sdSphereMapped(objDomainP, row.GetDimensions.X);
+                }
+            }
+            return new Vector2(0, 0);
+        }
+
         float map(in Vector3 pos)
         {
             if (ObjectType == "invtorus")
@@ -118,6 +232,13 @@ namespace calc
                     return sdSphere(repeat(pos, Repeat), ObjMod.X);
                 else
                     return sdSphere(pos, ObjMod.X);
+            }
+            else if (ObjectType == "custom")
+            {
+                if (Repeat.X > 0)
+                    return sdCustomObject(repeat(pos, Repeat));
+                else
+                    return sdCustomObject(pos);
             }
             return 10000000000;
         }
@@ -144,6 +265,13 @@ namespace calc
                     return sdSphereMapped(repeat(pos, Repeat), ObjMod.X);
                 else
                     return sdSphereMapped(pos, ObjMod.X);
+            }
+            else if (ObjectType == "custom")
+            {
+                if (Repeat.X > 0)
+                    return sdCustomObjectTex(repeat(pos, Repeat));
+                else
+                    return sdCustomObjectTex(pos);
             }
             return new Vector2(0,0);
         }
