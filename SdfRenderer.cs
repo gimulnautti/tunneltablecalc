@@ -107,6 +107,8 @@ namespace calc
             return polarCoordinates(p, new Vector3(0.0f, 1.0f, 0.0f), new Vector3(1.0f, 0.0f, 0.0f), new Vector3(0.0f, 0.0f, 1.0f));
         }
 
+        // TODO implement cylinder
+
         Vector3 repeat(in Vector3 pos, in Vector3 s)
         {
             return pos - s * vecRound(pos / s);
@@ -160,6 +162,11 @@ namespace calc
                 }
                 else if (row.Shape == "sphere")
                 {
+                    objD = sdSphere(objDomainP, row.GetDimensions.X);
+                }
+                else if (row.Shape == "cylinder")
+                {
+                    // todo implement cylinder
                     objD = sdSphere(objDomainP, row.GetDimensions.X);
                 }
 
