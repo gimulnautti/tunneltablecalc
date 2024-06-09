@@ -28,7 +28,12 @@ namespace calc
         private float RenderDistance;
         private List<SdfCsvRow> CustomObjectRows;
 
-        public SdfRenderer(string objectType, string objectFileName, Vector2 tiling, Vector2 objMod, Vector3 viewPoint, Vector3 lookAt, Vector3 viewUp, Vector3 repeat, float renderDistance, bool flipGradient)
+        private Vector3 DiffuseDir;
+        private float DiffuseAmt;
+        private Vector3 AmbientDir;
+        private float AmbientAmt;
+
+        public SdfRenderer(string objectType, string objectFileName, Vector2 tiling, Vector2 objMod, Vector3 viewPoint, Vector3 lookAt, Vector3 viewUp, Vector3 repeat, float renderDistance, bool flipGradient, Vector3 diffuseDir, float diffuseAmt, Vector3 ambientDir, float ambientAmt)
 		{
 			ObjectType = objectType;
             ObjectFileName = objectFileName;
@@ -40,6 +45,10 @@ namespace calc
 			Repeat = repeat;
             RenderDistance = renderDistance;
             FlipGradient = flipGradient;
+            DiffuseDir = diffuseDir;
+            DiffuseAmt = diffuseAmt;
+            AmbientDir = ambientDir;
+            AmbientAmt = ambientAmt;
 
             if (objectFileName != string.Empty)
             {
@@ -346,8 +355,8 @@ namespace calc
             {
                 Vector3 pos = ViewPoint + t * rd;
                 Vector3 nor = calcNormal(pos);
-                float dif = 0.4f * float.Clamp(Vector3.Dot(nor, new Vector3(0.7f, 1.6f, 0.4f)), 0.0f, 1.0f);
-                float amb = 0.4f * Vector3.Dot(nor, new Vector3(0.0f, 0.8f, 0.6f));
+                float dif = DiffuseAmt * float.Clamp(Vector3.Dot(nor, DiffuseDir), 0.0f, 1.0f);
+                float amb = AmbientAmt * Vector3.Dot(nor, AmbientDir);
                 float col = amb + dif;
 
                 //col *= MathF.Sqrt(col); // Gamma

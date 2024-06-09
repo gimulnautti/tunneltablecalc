@@ -63,6 +63,23 @@ namespace calc
         public string RenderDistance { get; set; }
         public float GetRenderDistance { get { return float.Parse(RenderDistance, CultureInfo.InvariantCulture); } }
 
+        [Name("DiffuseDir")]
+        public string DiffuseDir { get; set; }
+        public Vector3 GetDiffuseDir { get { return parseVec3(DiffuseDir); } }
+
+        [Name("DiffuseAmt")]
+        public string DiffuseAmt { get; set; }
+        public float GetDiffuseAmt { get { return float.Parse(DiffuseAmt, CultureInfo.InvariantCulture); } }
+
+        [Name("AmbientDir")]
+        public string AmbientDir { get; set; }
+        public Vector3 GetAmbientDir { get { return parseVec3(AmbientDir); } }
+
+        [Name("AmbientAmt")]
+        public string AmbientAmt { get; set; }
+        public float GetAmbientAmt { get { return float.Parse(AmbientAmt, CultureInfo.InvariantCulture); } }
+
+
         private Vector2 parseVec2(string src)
         {
             string[] sArray = src.Split(',');
