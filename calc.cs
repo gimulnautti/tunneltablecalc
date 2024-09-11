@@ -58,6 +58,41 @@ class Program
 
                 C64Writer.WriteColor(row.File, colorMap);
             }
+            if (row.Type == "mapping" && row.Type2 == "platter")
+            {
+                Vector2[] mapping = new Vector2[80 * 50];
+                float aspect = 80.0f / 50.0f;
+
+                for (int i = 0; i < 50; ++i)
+                {
+                    for (int j = 0; j < 80; ++j)
+                    {
+                        Vector2 uv = new Vector2((float)j / 80.0f, (float)i / 50.0f);
+                        int index = i * 80 + j;
+                        mapping[index] = TunnelRenderer.mapPlatter(uv, aspect, row.GetTiling, row.GetModulation, row.GetObjectMod);
+                    }
+                }
+
+                C64Writer.WriteMapping(row.File, mapping, row.GetTexSize);
+            }
+            else if (row.Type == "color" && row.Type2 == "platter")
+            {
+                int[] colorMap = new int[40 * 25];
+
+                for (int i = 0; i < 25; ++i)
+                {
+                    for (int j = 0; j < 40; ++j)
+                    {
+                        float aspect = 80.0f / 50.0f;
+
+                        Vector2 uv = new Vector2((float)j / 40.0f, (float)i / 25.0f);
+                        int index = i * 40 + j;
+                        colorMap[index] = TunnelRenderer.mapPlatterColor(uv, aspect, row.GetModulation, row.GetObjectMod, row.FlipGradient);
+                    }
+                }
+
+                C64Writer.WriteColor(row.File, colorMap);
+            }
             else if (row.Type2 == "sdf")
             {
                 SdfRenderer r = new SdfRenderer(row.Object, row.Filename, row.GetTiling, row.GetObjectMod, row.GetViewPoint, row.GetLookAt, row.GetViewUp, row.GetRepeat, row.GetRenderDistance, row.FlipGradient, row.GetDiffuseDir, row.GetDiffuseAmt, row.GetAmbientDir, row.GetAmbientAmt);
