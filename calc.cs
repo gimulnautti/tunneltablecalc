@@ -61,7 +61,7 @@ class Program
             if (row.Type == "mapping" && row.Type2 == "platter")
             {
                 Vector2[] mapping = new Vector2[80 * 50];
-                float aspect = 80.0f / 50.0f;
+                float aspect = 0.65f * 80.0f / 50.0f;
 
                 for (int i = 0; i < 50; ++i)
                 {
@@ -83,7 +83,7 @@ class Program
                 {
                     for (int j = 0; j < 40; ++j)
                     {
-                        float aspect = 80.0f / 50.0f;
+                        float aspect = 0.65f * 80.0f / 50.0f;
 
                         Vector2 uv = new Vector2((float)j / 40.0f, (float)i / 25.0f);
                         int index = i * 40 + j;

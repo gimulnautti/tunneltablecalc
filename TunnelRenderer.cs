@@ -79,7 +79,7 @@ namespace calc
 
             Vector2 up = new Vector2(0, 1);
             Vector2 right = new Vector2(1, 0);
-            Vector2 middle = new Vector2(0.5f * aspect, 0.5f);
+            Vector2 middle = new Vector2(0.4f * aspect, 0.34f);
             Vector2 toFrag = uv - middle;
 
             // angle + log distance from middle
@@ -117,7 +117,7 @@ namespace calc
 
             Vector2 up = new Vector2(0, 1);
             Vector2 right = new Vector2(1, 0);
-            Vector2 middle = new Vector2(0.5f * aspect, 0.5f);
+            Vector2 middle = new Vector2(0.4f * aspect, 0.34f);
             Vector2 toFrag = uv - middle;
 
             // angle + log distance from middle
@@ -133,6 +133,7 @@ namespace calc
             }
 
             // resolve color 
+            dist *= 1.2f;
             int gradIdx = (int)MathF.Max(0, MathF.Min(7, dist * 7.0f));
             if (flipGradient)
                 gradIdx = 7 - gradIdx;
