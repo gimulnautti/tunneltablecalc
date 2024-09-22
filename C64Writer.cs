@@ -1,10 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Numerics;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace calc
 {
-	public class C64Writer
+	public static class C64Writer
 	{
         public static void WriteMapping(String fileName, Vector2[] tunnelMap, Vector2 texSize)
         {
@@ -63,6 +65,61 @@ namespace calc
                 }
                 
             }
+        }
+
+        private static Image ToImageSharp(this byte[] byteArrayIn, int width, int height)
+        {
+            Image<Rgb24> image = new Image<Rgb24>(width, height);
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    int baseIdx = (y * width + x) * 3;
+                    image[x, y] = new Rgb24(byteArrayIn[baseIdx], byteArrayIn[baseIdx + 1], byteArrayIn[baseIdx + 2]);
+                }
+            }
+            return image;
+        }
+
+        private static byte[] tunnelMapToImageBytes(Vector2[] tunnelMap, int count)
+        {
+            byte[] bytes = new byte[count * 3];
+            for (int i = 0; i < count; ++i)
+            {
+                byte valueX = (byte)MathF.Round(tunnelMap[i].X * 255.0f);
+                byte valueY = (byte)MathF.Round(tunnelMap[i].Y * 255.0f);
+                bytes[i*3] = valueX;
+                bytes[i*3+1] = 0;
+                bytes[i*3+2] = valueY;
+            }
+            return bytes;
+        }
+
+        private static byte[] colorMapToImageBytes(int[] colorMap, int count)
+        {
+            byte[] bytes = new byte[count * 3];
+            for (int i = 0; i < count; ++i)
+            {
+                byte value = (byte)(colorMap[i] * 255 / 7);
+                bytes[i*3] = value;
+                bytes[i*3+1] = value;
+                bytes[i*3+2] = value;
+            }
+            return bytes;
+        }
+
+        public static void WriteDebugMappingImage(String fileName, Vector2[] tunnelMap)
+        {
+            byte[] bytes = tunnelMapToImageBytes(tunnelMap, 80 * 50);
+            Image image = ToImageSharp(bytes, 80, 50);
+            image.Save(fileName);
+        }
+
+        public static void WriteDebugColorImage(String fileName, int[] colorMap)
+        {
+            byte[] bytes = colorMapToImageBytes(colorMap, 40 * 25);
+            Image image = ToImageSharp(bytes, 40, 25);
+            image.Save(fileName);        
         }
     }
 }

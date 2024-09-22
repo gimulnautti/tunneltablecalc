@@ -1,5 +1,6 @@
 using System;
 using System.Numerics;
+using System.Linq;
 using CsvHelper;
 using calc;
 using System.Globalization;
@@ -39,6 +40,7 @@ class Program
                 }
 
                 C64Writer.WriteMapping(row.File, mapping, row.GetTexSize);
+                C64Writer.WriteDebugMappingImage(row.File + "-debug.png", mapping);
             }
             else if (row.Type == "color" && row.Type2 == "tunnel")
             {
@@ -57,6 +59,7 @@ class Program
                 }
 
                 C64Writer.WriteColor(row.File, colorMap);
+                C64Writer.WriteDebugColorImage(row.File + "-debug.png", colorMap);
             }
             if (row.Type == "mapping" && row.Type2 == "platter")
             {
@@ -74,6 +77,7 @@ class Program
                 }
 
                 C64Writer.WriteMapping(row.File, mapping, row.GetTexSize);
+                C64Writer.WriteDebugMappingImage(row.File + "-debug.png", mapping);
             }
             else if (row.Type == "color" && row.Type2 == "platter")
             {
@@ -92,6 +96,7 @@ class Program
                 }
 
                 C64Writer.WriteColor(row.File, colorMap);
+                C64Writer.WriteDebugColorImage(row.File + "-debug.png", colorMap);
             }
             else if (row.Type2 == "sdf")
             {
@@ -114,6 +119,7 @@ class Program
                     }
 
                     C64Writer.WriteMapping(row.File, mapping, row.GetTexSize);
+                    C64Writer.WriteDebugMappingImage(row.File + "-debug.png", mapping);
                 }
                 else if (row.Type == "color")
                 {
@@ -132,6 +138,7 @@ class Program
                     }
 
                     C64Writer.WriteColor(row.File, colorMap);
+                    C64Writer.WriteDebugColorImage(row.File + "-debug.png", colorMap);
                 }
             }
             else if (row.Type2 == "readpng" && row.Type == "texture")
