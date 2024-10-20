@@ -16,10 +16,10 @@ invtorus2.bin,mapping,sdf,,"8,8","8.0,8.0",,FALSE,invtorus,"2.2,1.5","-3.0,0.4,-
 invtoruscol2.bin,color,sdf,,,"8.0,8.0",,FALSE,invtorus,"2.2,1.5","-3.0,0.4,-2.0","3.0,0.5,0.0","0.4,0.7,0.0","6.0,5.0,6.0",24,TRUE,"0.7,1.6,0.4",0.4,"0.0,0.8,0.6",0.4
 stereotex-1.bin,texture,readpng,stereo-1.png,"32,8",,,FALSE,,,,,,,,FALSE,,,,
 stereotex-2.bin,texture,readpng,stereo-2.png,"32,8",,,FALSE,,,,,,,,FALSE,,,,
-sdfcustom.bin,mapping,sdf,customsdf.csv,"32,8","6.0,6.0",,FALSE,custom,,"-1.0,-0.1,-1.9","0.0,0.0,0.0","0.0,1.0,0.0",,35,TRUE,"0.7,1.6,0.4",0.4,"0.0,0.8,0.6",0.4
-sdfcustomcol.bin,color,sdf,customsdf.csv,"32,8","6.0,6.0",,FALSE,custom,,"-1.0,-0.1,-1.9","0.0,0.0,0.0","0.0,1.0,0.0",,35,TRUE,"0.7,1.6,0.4",0.4,"0.0,0.8,0.6",0.4
-sdfface.bin,mapping,sdf,facesdf.csv,"32,8","6.0,6.0",,FALSE,custom,,"-0.0,-0.1,-0.4","0.0,0.0,0.0","0.0,1.0,0.0",,6,TRUE,"0.7,1.6,0.4",0.4,"0.0,0.8,0.6",0.4
-sdffacecol.bin,color,sdf,facesdf.csv,"32,8","6.0,6.0",,FALSE,custom,,"-0.0,-0.1,-0.4","0.0,0.0,0.0","0.0,1.0,0.0",,6,TRUE,"0.7,1.6,0.4",0.4,"0.0,0.8,0.6",0.4
+sdfcustom.bin,mapping,sdf,customsdf.csv,"8,8","6.0,6.0",,FALSE,custom,,"0.0,-0.2,-3.0","0.0,0.0,0.0","0.4,0.7,0.0",,35,TRUE,"0.7,1.6,0.4",0.4,"0.0,0.8,0.6",0.4
+sdfcustomcol.bin,color,sdf,customsdf.csv,"8,8","6.0,6.0",,FALSE,custom,,"0.0,-0.2,-3.0","0.0,0.0,0.0","0.4,0.7,0.0",,35,TRUE,"0.7,1.6,0.4",0.4,"0.0,0.8,0.6",0.4
+sdfface.bin,mapping,sdf,facesdf.csv,"8,8","6.0,6.0",,FALSE,custom,,"-0.0,-0.1,-0.4","0.0,0.0,0.0","0.0,1.0,0.0",,6,TRUE,"0.7,1.6,0.4",0.4,"0.0,0.8,0.6",0.4
+sdffacecol.bin,color,sdf,facesdf.csv,"8,8","6.0,6.0",,FALSE,custom,,"-0.0,-0.1,-0.4","0.0,0.0,0.0","0.0,1.0,0.0",,6,TRUE,"0.7,1.6,0.4",0.4,"0.0,0.8,0.6",0.4
 invtoruscol3.bin,color,sdf,,,"6.0,6.0",,FALSE,invtorus,"2.5,2.0","-3.5,0.4,-2.0","0.0,0.0,0.0","0.0,0.8,0.22",,12,TRUE,"0.35,0.8,0.4",0.4,"0.0,0.8,0.6",0.4
 invtoruscol4.bin,color,sdf,,,"6.0,6.0",,FALSE,invtorus,"2.5,2.0","-3.5,0.4,-2.0","0.0,0.0,0.0","0.0,0.8,0.22",,12,TRUE,"0.0,0.0,0.4",0.4,"0.0,0.8,0.6",0.4
 invtoruscol5.bin,color,sdf,,,"6.0,6.0",,FALSE,invtorus,"2.5,2.0","-3.5,0.4,-2.0","0.0,0.0,0.0","0.0,0.8,0.22",,12,TRUE,"-0.35,-0.8,0.4",0.4,"0.0,0.8,0.6",0.4
